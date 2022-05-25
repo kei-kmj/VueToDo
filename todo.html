@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<title>todo</title>
+<style>
+    .input-container {
+        display: grid;
+        grid-template-rows: 200px 50px;
+        grid-auto-columns: 300px 300px;
+        grid-template-areas: "inputArea previewArea" "buttonArea buttonArea";
+        grid-gap: 10px;
+    }
+
+    .inputArea {
+        grid-area: inputArea;
+        display: grid;
+        width: 300px;
+        height: 80px;
+    }
+
+    .previewArea {
+        grid-area: previewArea;
+        display: grid;
+        width: 300px;
+        height: 80px;
+    }
+
+    .buttonArea {
+        grid-area: buttonArea;
+        display: grid;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .table {
+        margin-top: 10px;
+        width: 600px;
+        border-collapse: collapse;
+    }
+
+    .th, td {
+        margin-top: 10px;
+        width: 610px;
+        word-break: break-all;
+    }
+</style>
+<div id="app">
+    <div class="input-container">
+        <form class="inputArea">
+            <p>todo登録</p>
+            <label>タイトル<input v-model="title"></label>
+            <label>内容
+                <textArea v-model="content"></textArea>
+            </label>
+        </form>
+        <div class="previewArea">
+            <p>プレビュー</p>
+            <label>タイトル
+                <input v-bind:value="title" readonly>
+            </label>
+            <label>内容
+                <textArea v-bind:value="content" readonly></textArea>
+            </label></div>
+        <div class="buttonArea">
+            <button v-on:click="saveToDo">ToDoを登録する</button>
+        </div>
+    </div>
+    <div>
+        <table>
+            <thead>
+            <th>タイトル</th>
+            <th>内容</th>
+            </thead>
+            <tbody>
+            <tr v-for="(todo,index) in todos">
+                <td><span v-if="!todo.editable" @click="edit(todo,index)">{{todo.title}}</span>
+                    <input v-show="todo.editable" v-model="todo.title" @blur="todo.editable = false" ref="editTitle">
+                </td>
+                <td><span if="!todo.editable">{{todo.content}}</span>
+                    <input v-show="todo.editable" v-model="todo.content" @blur="todo.editable = false"
+                           ref="editContent"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <br>
+    <br>
+    <br>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.global.js"></script>
+<script>
+  const app = Vue.createApp({
+    data: () => ({
+      todos: [],
+      title: '',
+      content: '',
+    }),
+    methods: {
+      saveToDo: function () {
+        let todo = {
+          title: this.title,
+          content: this.content,
+          editable: false,
+        }
+        this.todos.push(todo)
+        alert('todo' + this.title + 'を登録しました')
+      },
+      edit: function (todo) {
+        todo.editable = true
+      }
+    }
+  });
+  app.mount('#app')
+
+</script>
+
+</html>
