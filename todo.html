@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="ja" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <meta charset="UTF-8">
 <title>todo</title>
 <style>
@@ -72,13 +72,8 @@
             <th>内容</th>
             </thead>
             <tbody>
-            <tr v-for="(todo,index) in todos">
-                <td><span v-if="!todo.editable" @click="edit(todo,index)">{{todo.title}}</span>
-                    <input v-show="todo.editable" v-model="todo.title" @blur="todo.editable = false" ref="editTitle">
-                </td>
-                <td><span if="!todo.editable">{{todo.content}}</span>
-                    <input v-show="todo.editable" v-model="todo.content" @blur="todo.editable = false"
-                           ref="editContent"></td>
+            <tr v-is="'todo-row'" v-for="(todo, index) in todos" :todo="todo" :key="index">
+
             </tr>
             </tbody>
         </table>
@@ -91,7 +86,36 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.global.js"></script>
 <script>
+  const todoRowComponent = Vue.defineComponent({
+    data: function () {
+      return {editable: false}
+    },
+    methods: {
+      edit: function () {
+        this.editable = true
+        this.$nextTick(() => {
+          this.$refs.editToDo.focus()
+        })
+      }
+    },
+    template:`
+        <tr>
+          <td>
+            <span v-if="!todo.editable" @click="edit()">{{todo.title}}</span>
+          <input v-show="editable" v-model="todo.title" @blur="editable = false" ref="editTitle">
+        </td>
+  <td><span if="!todo.editable">{{todo.content}}</span>
+    <input v-show="editable" v-model="todo.content" @blur="editable = false"
+    ref="editContent">
+  </td>
+  </tr>
+  `,
+    props: ["todo"],
+  })
   const app = Vue.createApp({
+    components:{
+      'todo-row':todoRowComponent
+    },
     data: () => ({
       todos: [],
       title: '',
