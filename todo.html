@@ -34,7 +34,7 @@
 
     .table {
         margin-top: 10px;
-        width: 600px;
+        width: 100px;
         border-collapse: collapse;
     }
 
@@ -72,8 +72,24 @@
             <th>内容</th>
             </thead>
             <tbody>
-            <tr v-is="'todo-row'" v-for="(todo, index) in todos" :todo="todo" :key="index">
-
+            <tr v-for="(todo,index) in todos">
+                <td>
+                    <span v-if="!todo.editable" @click="edit(todo)">{{todo.title}}</span>
+                    <label>
+                        <input v-show="todo.editable" v-model="todo.title" @blur="todo.editable = false"
+                               rel="editTitle">
+                    </label>
+                </td>
+                <td>
+                    <span v-if="!todo.editable">{{todo.content}}</span>
+                    <label>
+                        <input v-show="todo.editable" v-model="todo.content" @blur="todo.editable = false"
+                               rel="editContent">
+                    </label>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger" @click="destroy(todo)">削除</button>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -86,36 +102,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.global.js"></script>
 <script>
-  const todoRowComponent = Vue.defineComponent({
-    data: function () {
-      return {editable: false}
-    },
-    methods: {
-      edit: function () {
-        this.editable = true
-        this.$nextTick(() => {
-          this.$refs.editToDo.focus()
-        })
-      }
-    },
-    template:`
-        <tr>
-          <td>
-            <span v-if="!todo.editable" @click="edit()">{{todo.title}}</span>
-          <input v-show="editable" v-model="todo.title" @blur="editable = false" ref="editTitle">
-        </td>
-  <td><span if="!todo.editable">{{todo.content}}</span>
-    <input v-show="editable" v-model="todo.content" @blur="editable = false"
-    ref="editContent">
-  </td>
-  </tr>
-  `,
-    props: ["todo"],
-  })
   const app = Vue.createApp({
-    components:{
-      'todo-row':todoRowComponent
-    },
     data: () => ({
       todos: [],
       title: '',
@@ -133,6 +120,14 @@
       },
       edit: function (todo) {
         todo.editable = true
+        this.$nextTick(() => {
+          console.log(this.$refs)
+          this.$refs.editTodo
+        })
+      },
+      destroy: function (todo) {
+        const index = this.todos.indexOf(todo)
+        this.todos.splice(index, 1)
       }
     }
   });
