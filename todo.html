@@ -2,137 +2,117 @@
 <html lang="ja" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <meta charset="UTF-8">
 <title>todo</title>
-<style>
-    .input-container {
-        display: grid;
-        grid-template-rows: 200px 50px;
-        grid-auto-columns: 300px 300px;
-        grid-template-areas: "inputArea previewArea" "buttonArea buttonArea";
-        grid-gap: 10px;
-    }
 
-    .inputArea {
-        grid-area: inputArea;
-        display: grid;
-        width: 300px;
-        height: 80px;
-    }
-
-    .previewArea {
-        grid-area: previewArea;
-        display: grid;
-        width: 300px;
-        height: 80px;
-    }
-
-    .buttonArea {
-        grid-area: buttonArea;
-        display: grid;
-        justify-items: center;
-        align-items: center;
-    }
-
-    .table {
-        margin-top: 10px;
-        width: 100px;
-        border-collapse: collapse;
-    }
-
-    .th, td {
-        margin-top: 10px;
-        width: 610px;
-        word-break: break-all;
-    }
-</style>
+<!-- todo新規登録 -->
 <div id="app">
-    <div class="input-container">
-        <form class="inputArea">
-            <p>todo登録</p>
-            <label>タイトル<input v-model="title"></label>
-            <label>内容
-                <textArea v-model="content"></textArea>
-            </label>
-        </form>
-        <div class="previewArea">
-            <p>プレビュー</p>
-            <label>タイトル
-                <input v-bind:value="title" readonly>
-            </label>
-            <label>内容
-                <textArea v-bind:value="content" readonly></textArea>
-            </label></div>
-        <div class="buttonArea">
-            <button v-on:click="saveToDo">ToDoを登録する</button>
-        </div>
-    </div>
-    <div>
-        <table>
-            <thead>
-            <th>タイトル</th>
-            <th>内容</th>
-            </thead>
-            <tbody>
-            <tr v-for="(todo,index) in todos">
-                <td>
-                    <span v-if="!todo.editable" @click="edit(todo)">{{todo.title}}</span>
-                    <label>
-                        <input v-show="todo.editable" v-model="todo.title" @blur="todo.editable = false"
-                               rel="editTitle">
-                    </label>
-                </td>
-                <td>
-                    <span v-if="!todo.editable">{{todo.content}}</span>
-                    <label>
-                        <input v-show="todo.editable" v-model="todo.content" @blur="todo.editable = false"
-                               rel="editContent">
-                    </label>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-outline-danger" @click="destroy(todo)">削除</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <h1 class="title">{{ appName }}</h1>
+    <table class="input_table">
 
-    </div>
-    <br>
-    <br>
-    <br>
+        <tr>
+            <td><label>
+                <input class="form" v-model="title" placeholder="タイトル">
+            </label></td>
+            <td><label>
+                <input class="form" v-model="content" placeholder="内容">
+            </label></td>
+            <td>
+                <button v-on:click="pushTodo">登録</button>
+            </td>
+        </tr>
+    </table>
+
+    <p>
+        <button v-on:click="switchTodo">完了/未了</button>
+    </p>
+
+    <!-- todo一覧-->
+    <table class="todos">
+        <thead>
+        <tr>
+            <th>状態</th>
+            <th>タイトル</th>
+            <th class="content_width">内容</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr v-for="todo in getTodos">
+            <td v-if="todo.done">完了</td>
+            <td v-else>未了</td>
+            <td v-if="todo.id!=edit">{{ todo.title }}</td>
+            <td v-else><label>
+                <input v-model="todo.title">
+            </label></td>
+            <td v-if="todo.id!=edit">{{ todo.content }}</td>
+            <td v-else><label>
+                <input v-model="todo.content">
+            </label></td>
+            <td>
+                <button v-on:click="changeTodo(todo.id)" v-if="todo.done">未了に戻す</button>
+            </td>
+            <td>
+                <button v-on:click="changeTodo(todo.id)" v-if="!todo.done">完了</button>
+            </td>
+            <td>
+                <button v-on:click="editTodo(todo.id)">編集</button>
+            </td>
+            <td>
+                <button v-on:click="deleteTodo(todo.id)">削除</button>
+            </td>
+        </tr>
+    </table>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.global.js"></script>
-<script>
-  const app = Vue.createApp({
-    data: () => ({
-      todos: [],
-      title: '',
-      content: '',
-    }),
-    methods: {
-      saveToDo: function () {
-        let todo = {
-          title: this.title,
-          content: this.content,
-          editable: false,
-        }
-        this.todos.push(todo)
-        alert('todo' + this.title + 'を登録しました')
-      },
-      edit: function (todo) {
-        todo.editable = true
-        this.$nextTick(() => {
-          console.log(this.$refs)
-          this.$refs.editTodo
-        })
-      },
-      destroy: function (todo) {
-        const index = this.todos.indexOf(todo)
-        this.todos.splice(index, 1)
-      }
+<script src="./main.js"></script>
+
+<style>
+    .title {
+        text-align: center;
     }
-  });
-  app.mount('#app')
 
-</script>
+    .input_table {
+        width: 80%;
+        margin: 3px auto;
 
+    }
+
+    .form {
+        width: 80%;
+        padding: 15px;
+        background: #f8f8f8;
+        border: 1px solid rgba(0, 0, 0, 0.075);
+        margin-bottom: 25px;
+        color: #727272;
+    }
+
+    .todos {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-top: solid 1px #778ca3;
+    }
+
+    .todos thead tr th {
+        background-color: white;
+    }
+
+    .todos tr:nth-child(2n+1) {
+        background: #e9faf9;
+    }
+
+    .todos th,
+    .todos td {
+        padding: 10px;
+        border-bottom: solid 1px #778ca3;
+    }
+
+    .content_width {
+        width: 50%;
+    }
+
+</style>
 </html>
