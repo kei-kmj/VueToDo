@@ -1,68 +1,87 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="ja" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <meta charset="UTF-8">
 <title>todo</title>
 
 <!-- todo新規登録 -->
 <div id="app">
-    <h1 class="title">{{ appName }}</h1>
-    <table class="input_table">
+  <h1 class="title">{{ appName }}</h1>
+  <table class="input_table">
 
-        <tr>
-            <td><label>
-                <input class="form" v-model="title" placeholder="タイトル">
-            </label></td>
-            <td><label>
-                <input class="form" v-model="content" placeholder="内容">
-            </label></td>
-            <td>
-                <button v-on:click="pushTodo">登録</button>
-            </td>
-        </tr>
-    </table>
+    <tr>
+      <td>
+        <label>
+          <input
+                  class="form"
+                  v-model="title"
+                  placeholder="タイトル"/>
+        </label>
+      </td>
+      <td>
+        <label>
+          <input
+                  class="form"
+                  v-model="content"
+                  placeholder="内容"/>
+        </label>
+      </td>
+      <td>
+        <button v-on:click="createTodo">登録</button>
+      </td>
+    </tr>
+  </table>
 
-    <p>
-        <button v-on:click="switchTodo">完了/未了</button>
-    </p>
+  <!-- 完了/未了切り替え-->
+  <p>
+    <button v-on:click="switchTodo">完了/未了</button>
+  </p>
 
-    <!-- todo一覧-->
-    <table class="todos">
-        <thead>
-        <tr>
-            <th>状態</th>
-            <th>タイトル</th>
-            <th class="content_width">内容</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tr v-for="todo in getTodos">
-            <td v-if="todo.done">完了</td>
-            <td v-else>未了</td>
-            <td v-if="todo.id!=edit">{{ todo.title }}</td>
-            <td v-else><label>
-                <input v-model="todo.title">
-            </label></td>
-            <td v-if="todo.id!=edit">{{ todo.content }}</td>
-            <td v-else><label>
-                <input v-model="todo.content">
-            </label></td>
-            <td>
-                <button v-on:click="changeTodo(todo.id)" v-if="todo.done">未了に戻す</button>
-            </td>
-            <td>
-                <button v-on:click="changeTodo(todo.id)" v-if="!todo.done">完了</button>
-            </td>
-            <td>
-                <button v-on:click="editTodo(todo.id)">編集</button>
-            </td>
-            <td>
-                <button v-on:click="deleteTodo(todo.id)">削除</button>
-            </td>
-        </tr>
-    </table>
+  <!-- todo一覧-->
+  <table class="todos">
+    <thead>
+    <tr>
+      <th>状態</th>
+      <th>タイトル</th>
+      <th class="content_width">内容</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tr
+            v-for="todo in getTodos"
+            :key="todo.id">
+      <td v-if="todo.done">完了</td>
+      <td v-else>未了</td>
+      <td v-if="todo.id!=edit">{{ todo.title }}</td>
+      <td v-else><label>
+        <input v-model="todo.title">
+      </label></td>
+      <td v-if="todo.id!=edit">{{ todo.content }}</td>
+      <td v-else><label>
+        <input v-model="todo.content">
+      </label></td>
+      <td>
+        <button
+                v-on:click="changeTodo(todo.id)"
+                v-if="todo.done">未了に戻す
+        </button>
+      </td>
+      <td>
+        <button
+                v-on:click="changeTodo(todo.id)"
+                v-if="!todo.done">完了
+        </button>
+      </td>
+      <td>
+        <button v-on:click="editTodo(todo.id)">編集</button>
+      </td>
+      <td>
+        <button v-on:click="deleteTodo(todo.id)">削除</button>
+      </td>
+    </tr>
+  </table>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.global.js"></script>
@@ -71,21 +90,21 @@
 <style>
     .title {
         text-align: center;
+
     }
 
     .input_table {
         width: 80%;
         margin: 3px auto;
-
     }
 
     .form {
-        width: 80%;
+        width: 90%;
         padding: 15px;
         background: #f8f8f8;
         border: 1px solid rgba(0, 0, 0, 0.075);
         margin-bottom: 25px;
-        color: #727272;
+        color: black;
     }
 
     .todos {

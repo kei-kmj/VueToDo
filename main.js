@@ -7,7 +7,7 @@ const todos = [
   }
 ]
 
-const myData = {
+const todoData = {
   appName: 'TODOアプリ',
   todos,
   done: false,
@@ -18,7 +18,7 @@ const myData = {
 
 const app = Vue.createApp({
   data () {
-    return myData
+    return todoData
   },
   created () {
     console.log('created!!')
@@ -31,7 +31,7 @@ const app = Vue.createApp({
       this.saveTodos()
     },
 
-    pushTodo: function () {
+    createTodo: function () {
       this.done = false
       const today = Date.now()
       const todo = {
