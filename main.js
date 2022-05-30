@@ -21,7 +21,6 @@ const app = Vue.createApp({
     return todoData
   },
   created () {
-    console.log('created!!')
     this.loadTodos()
   },
 
@@ -63,7 +62,6 @@ const app = Vue.createApp({
       })
     },
     editTodo: function (id) {
-      console.log('editTodo:' + id)
       this.edit = id
     },
 
