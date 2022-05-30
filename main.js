@@ -17,10 +17,10 @@ const todoData = {
 }
 
 const app = Vue.createApp({
-  data () {
+  data() {
     return todoData
   },
-  created () {
+  created() {
     this.loadTodos()
   },
 
@@ -36,11 +36,15 @@ const app = Vue.createApp({
       const todo = {
         id: today,
         done: false,
-        title: this.title = [] ? '(未入力)' : this.title,
+        title: this.title === "" ? '(未入力)' : this.title,
         content: this.content
       }
-      this.todos.push(todo)
-      this.saveTodos()
+      if (this.content === "") {
+        window.alert('内容を入力してください')
+      } else {
+        this.todos.push(todo)
+        this.saveTodos()
+      }
     },
 
     loadTodos: function () {
@@ -79,7 +83,7 @@ const app = Vue.createApp({
 
   },
   computed: {
-    getTodos () {
+    getTodos() {
       const extractTodos = this.todos.filter(todo => {
         return this.done === todo.done
       })
