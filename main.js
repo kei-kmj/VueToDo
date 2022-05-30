@@ -36,10 +36,11 @@ const app = Vue.createApp({
       const todo = {
         id: today,
         done: false,
-        title: this.title.trim() === "" ? '(未入力)' : this.title,
+        title: !this.title ? '(未入力)' : this.title,
         content: this.content
       }
       if (!this.content) {
+        console.log(this.title)
         window.alert('内容を入力してください')
       } else {
         this.todos.push(todo)
