@@ -40,7 +40,6 @@ const app = Vue.createApp({
         content: this.content
       }
       if (!this.content) {
-        console.log(this.title)
         window.alert('内容を入力してください')
       } else {
         this.todos.push(todo)
