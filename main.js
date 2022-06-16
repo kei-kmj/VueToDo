@@ -32,9 +32,8 @@ const app = Vue.createApp({
 
     createTodo: function () {
       this.done = false
-      const today = Date.now()
       const todo = {
-        id: today,
+        id: Date.now(),
         done: false,
         title: !this.title ? '(未入力)' : this.title,
         content: this.content
