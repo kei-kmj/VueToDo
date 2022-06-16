@@ -80,7 +80,6 @@ const app = Vue.createApp({
       this.title = null
       this.content = null
     }
-
   },
   computed: {
     getTodos() {
