@@ -17,10 +17,10 @@ const todoData = {
 }
 
 const app = Vue.createApp({
-  data() {
+  data () {
     return todoData
   },
-  created() {
+  created () {
     this.loadTodos()
   },
 
@@ -59,12 +59,12 @@ const app = Vue.createApp({
     },
 
     changeTodo: function (id) {
-      console.log('changeTodo:' + id)
       this.todos.forEach(todo => {
         if (todo.id === id) todo.done = !todo.done
         this.saveTodos()
       })
     },
+
     editTodo: function (id) {
       this.edit = id
     },
@@ -81,8 +81,9 @@ const app = Vue.createApp({
       this.content = null
     }
   },
+
   computed: {
-    getTodos() {
+    getTodos () {
       const extractTodos = this.todos.filter(todo => {
         return this.done === todo.done
       })
